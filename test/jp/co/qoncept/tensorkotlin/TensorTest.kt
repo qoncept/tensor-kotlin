@@ -1,8 +1,10 @@
 package jp.co.qoncept.tensorkotlin
 
-import junit.framework.TestCase
+import org.junit.Assert.*
+import org.junit.Test
 
-class TensorTest: TestCase() {
+class TensorTest {
+    @Test
     fun testIndex() {
         run {
             val a = Tensor(Shape())
@@ -25,6 +27,7 @@ class TensorTest: TestCase() {
         }
     }
 
+    @Test
     fun testAdd() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
@@ -34,6 +37,7 @@ class TensorTest: TestCase() {
         }
     }
 
+    @Test
     fun testSub() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
@@ -43,6 +47,7 @@ class TensorTest: TestCase() {
         }
     }
 
+    @Test
     fun testMul() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
@@ -52,6 +57,7 @@ class TensorTest: TestCase() {
         }
     }
 
+    @Test
     fun testDiv() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
@@ -61,6 +67,7 @@ class TensorTest: TestCase() {
         }
     }
 
+    @Test
     fun testMatmul() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
@@ -70,6 +77,7 @@ class TensorTest: TestCase() {
         }
     }
 
+    @Test
     fun testEquals() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
