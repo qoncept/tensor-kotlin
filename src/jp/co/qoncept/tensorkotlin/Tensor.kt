@@ -1,7 +1,7 @@
 package jp.co.qoncept.tensorkotlin
 
 class Tensor(val shape: Shape, elements: FloatArray) {
-    private val _elements = elements
+    internal val _elements = elements
 
     val elements: FloatArray
         get() = _elements.clone()
