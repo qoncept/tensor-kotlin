@@ -23,7 +23,7 @@ class Tensor(val shape: Shape, elements: FloatArray) {
         }
     }
 
-    fun get(vararg indices: Int): Float {
+    operator fun get(vararg indices: Int): Float {
         return elements[index(indices)]
     }
 
@@ -70,8 +70,28 @@ operator fun Float.times(tensor: Tensor): Tensor {
 }
 
 fun Tensor.matmul(tensor: Tensor): Tensor {
-    // TODO
-    return this
+    assert({ shape.dimensions.size == 2 }, { "This tensor is not a matrix: shape = ${shape}" })
+    assert({ tensor.shape.dimensions.size == 2 }, { "The given tensor is not a matrix: shape = ${tensor.shape}" })
+
+    val n = shape.dimensions[1]
+    assert({ tensor.shape.dimensions[0] == n }, { "Incompatible shapes of matrices: self.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+
+    val numRows = shape.dimensions[0]
+    val numCols = tensor.shape.dimensions[1]
+
+    var elements = FloatArray(numRows * numCols)
+    var elementIndex = 0
+    for (r in 0 until numRows) {
+        for (c in 0 until numCols) {
+            var e: Float = 0.0f
+            for (i in 0 until n) {
+                e += this[r, i] * tensor[i, c]
+            }
+            elements[elementIndex++] = e
+        }
+    }
+
+    return Tensor(Shape(numRows, numCols), elements)
 }
 
 inline private fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
