@@ -88,6 +88,3 @@ operator fun Float.times(tensor: Tensor): Tensor {
     return tensor.times(this)
 }
 
-inline private fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
-    assert(Tensor::class.java, value, lazyMessage)
-}

@@ -37,3 +37,12 @@ internal inline fun FloatArray.map(transform: (Float) -> Float): FloatArray {
     }
     return result
 }
+
+internal inline fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
+    if (Tensor::class.java.desiredAssertionStatus()) {
+        if (!value()) {
+            val message = lazyMessage()
+            throw AssertionError(message)
+        }
+    }
+}

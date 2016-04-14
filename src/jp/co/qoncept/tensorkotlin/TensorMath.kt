@@ -50,7 +50,3 @@ val Tensor.cbrt: Tensor
 
 val Tensor.sigmoid: Tensor
     get() = Tensor(shape, _elements.map { (1.0 / Math.exp(-it.toDouble())).toFloat() })
-
-inline private fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
-    assert(Tensor::class.java, value, lazyMessage)
-}
