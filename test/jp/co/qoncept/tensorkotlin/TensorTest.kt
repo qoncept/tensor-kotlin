@@ -1,0 +1,118 @@
+package jp.co.qoncept.tensorkotlin
+
+import junit.framework.TestCase
+
+class TensorTest: TestCase() {
+    fun testIndex() {
+        run {
+            val a = Tensor(Shape())
+            assertEquals(a.index(intArrayOf()), 0)
+        }
+
+        run {
+            val a = Tensor(Shape(7))
+            assertEquals(a.index(intArrayOf(3)), 3)
+        }
+
+        run {
+            val a = Tensor(Shape(5, 7))
+            assertEquals(a.index(intArrayOf(1, 2)), 9)
+        }
+
+        run {
+            val a = Tensor(Shape(5, 7, 11))
+            assertEquals(a.index(intArrayOf(3, 1, 2)), 244)
+        }
+    }
+
+    fun testAdd() {
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
+            val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
+            val r = a + b
+            assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(8, 10, 12, 14, 16, 18)))
+        }
+    }
+
+    fun testSub() {
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
+            val b = Tensor(Shape(2, 3), floatArrayOf(12, 11, 10, 9, 8, 7))
+            val r = a - b
+            assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(-11, -9, -7, -5, -3, -1)))
+        }
+    }
+
+    fun testMul() {
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
+            val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
+            val r = a * b
+                    assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(7, 16, 27, 40, 55, 72)))
+        }
+    }
+
+    fun testDiv() {
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
+            val b = Tensor(Shape(2, 3), floatArrayOf(2, 4, 8, 16, 32, 64))
+            val r = a / b
+                    assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(0.5f, 0.5f, 0.375f, 0.25f, 0.15625f, 0.09375f)))
+        }
+    }
+
+    fun testMatmul() {
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
+            val b = Tensor(Shape(3, 4), floatArrayOf(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18))
+            val r = a.matmul(b)
+            assertEquals(r, Tensor(Shape(2, 4), floatArrayOf(74, 80, 86, 92, 173, 188, 203, 218)))
+        }
+    }
+
+    fun testEquals() {
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
+            val b = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
+            assertTrue(a == b)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
+            val b = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 17))
+            assertFalse(a == b)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
+            val b = Tensor(Shape(3, 2), floatArrayOf(2, 3, 5, 7, 11, 17))
+            assertFalse(a == b)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
+            val b = Tensor(Shape(2, 2), floatArrayOf(2, 3, 5, 7))
+            assertFalse(a == b)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 3), floatArrayOf(2, 3, 5, 7, 11, 13))
+            val b = Tensor(Shape(), floatArrayOf())
+            assertFalse(a == b)
+        }
+
+        run {
+            val a = Tensor(Shape(), floatArrayOf())
+            val b = Tensor(Shape(), floatArrayOf())
+            assertTrue(a == b)
+        }
+    }
+}
+
+private fun floatArrayOf(vararg elements: Int): FloatArray {
+    val result = FloatArray(elements.size)
+    for (i in elements.indices) {
+        result[i] = elements[i].toFloat()
+    }
+    return result
+}
