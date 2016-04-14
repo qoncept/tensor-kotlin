@@ -1,11 +1,5 @@
 package jp.co.qoncept.tensorkotlin
 
-private fun floatArrayOf(size: Int, repeatedValue: Float): FloatArray {
-    val array = FloatArray(size)
-    array.fill(repeatedValue)
-    return array
-}
-
 class Tensor(val shape: Shape, elements: FloatArray) {
     private val _elements = elements
 
@@ -63,35 +57,35 @@ class Tensor(val shape: Shape, elements: FloatArray) {
     operator fun div(scalar: Float): Tensor {
         return Tensor(shape, elements.map { it / scalar })
     }
+
+    fun matmul(tensor: Tensor): Tensor {
+        assert({ shape.dimensions.size == 2 }, { "This tensor is not a matrix: shape = ${shape}" })
+        assert({ tensor.shape.dimensions.size == 2 }, { "The given tensor is not a matrix: shape = ${tensor.shape}" })
+
+        val n = shape.dimensions[1]
+        assert({ tensor.shape.dimensions[0] == n }, { "Incompatible shapes of matrices: self.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+
+        val numRows = shape.dimensions[0]
+        val numCols = tensor.shape.dimensions[1]
+
+        var elements = FloatArray(numRows * numCols)
+        for (r in 0 until numRows) {
+            for (i in 0 until n) {
+                var elementIndex = r * numCols
+                val left = _elements[r * n + i]
+                for (c in 0 until numCols) {
+                    elements[elementIndex] += left * tensor._elements[i * numCols + c]
+                    elementIndex++
+                }
+            }
+        }
+
+        return Tensor(Shape(numRows, numCols), elements)
+    }
 }
 
 operator fun Float.times(tensor: Tensor): Tensor {
     return tensor.times(this)
-}
-
-fun Tensor.matmul(tensor: Tensor): Tensor {
-    assert({ shape.dimensions.size == 2 }, { "This tensor is not a matrix: shape = ${shape}" })
-    assert({ tensor.shape.dimensions.size == 2 }, { "The given tensor is not a matrix: shape = ${tensor.shape}" })
-
-    val n = shape.dimensions[1]
-    assert({ tensor.shape.dimensions[0] == n }, { "Incompatible shapes of matrices: self.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-
-    val numRows = shape.dimensions[0]
-    val numCols = tensor.shape.dimensions[1]
-
-    var elements = FloatArray(numRows * numCols)
-    var elementIndex = 0
-    for (r in 0 until numRows) {
-        for (c in 0 until numCols) {
-            var e: Float = 0.0f
-            for (i in 0 until n) {
-                e += this[r, i] * tensor[i, c]
-            }
-            elements[elementIndex++] = e
-        }
-    }
-
-    return Tensor(Shape(numRows, numCols), elements)
 }
 
 inline private fun assert(value: () -> Boolean, lazyMessage: () -> Any) {

@@ -1,5 +1,11 @@
 package jp.co.qoncept.tensorkotlin
 
+internal fun floatArrayOf(size: Int, repeatedValue: Float): FloatArray {
+    val array = FloatArray(size)
+    array.fill(repeatedValue)
+    return array
+}
+
 internal inline fun zipMap(a: FloatArray, b: FloatArray, operation: (Float, Float) -> Float): FloatArray {
     val result = FloatArray(a.size)
     for (i in a.indices) {

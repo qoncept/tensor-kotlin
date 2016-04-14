@@ -116,11 +116,3 @@ class TensorTest {
         }
     }
 }
-
-private fun floatArrayOf(vararg elements: Int): FloatArray {
-    val result = FloatArray(elements.size)
-    for (i in elements.indices) {
-        result[i] = elements[i].toFloat()
-    }
-    return result
-}
