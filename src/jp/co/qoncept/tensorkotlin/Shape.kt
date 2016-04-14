@@ -1,5 +1,7 @@
 package jp.co.qoncept.tensorkotlin
 
+import java.util.*
+
 class Shape(vararg dimensions: Int) {
     val dimensions: IntArray = dimensions.clone()
     val volume: Int
@@ -19,7 +21,7 @@ class Shape(vararg dimensions: Int) {
     }
 
     override fun toString(): String {
-        return dimensions.toString()
+        return Arrays.toString(dimensions)
     }
 }
 

@@ -46,3 +46,7 @@ internal inline fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
         }
     }
 }
+
+internal infix fun Int.ceilDiv(rhs: Int): Int {
+    return (this + rhs - 1) / rhs
+}

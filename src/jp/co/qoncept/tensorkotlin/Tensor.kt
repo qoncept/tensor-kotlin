@@ -1,5 +1,7 @@
 package jp.co.qoncept.tensorkotlin
 
+import java.util.*
+
 class Tensor(val shape: Shape, elements: FloatArray) {
     internal val _elements = elements
 
@@ -62,25 +64,29 @@ class Tensor(val shape: Shape, elements: FloatArray) {
         assert({ shape.dimensions.size == 2 }, { "This tensor is not a matrix: shape = ${shape}" })
         assert({ tensor.shape.dimensions.size == 2 }, { "The given tensor is not a matrix: shape = ${tensor.shape}" })
 
-        val n = shape.dimensions[1]
-        assert({ tensor.shape.dimensions[0] == n }, { "Incompatible shapes of matrices: self.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+        val inCols1Rows2 = shape.dimensions[1]
+        assert({ tensor.shape.dimensions[0] == inCols1Rows2 }, { "Incompatible shapes of matrices: self.shape = ${shape}, tensor.shape = ${tensor.shape}" })
 
-        val numRows = shape.dimensions[0]
-        val numCols = tensor.shape.dimensions[1]
+        val outRows = shape.dimensions[0]
+        val outCols = tensor.shape.dimensions[1]
 
-        var elements = FloatArray(numRows * numCols)
-        for (r in 0 until numRows) {
-            for (i in 0 until n) {
-                var elementIndex = r * numCols
-                val left = _elements[r * n + i]
-                for (c in 0 until numCols) {
-                    elements[elementIndex] += left * tensor._elements[i * numCols + c]
+        var elements = FloatArray(outRows * outCols)
+        for (r in 0 until outRows) {
+            for (i in 0 until inCols1Rows2) {
+                var elementIndex = r * outCols
+                val left = _elements[r * inCols1Rows2 + i]
+                for (c in 0 until outCols) {
+                    elements[elementIndex] += left * tensor._elements[i * outCols + c]
                     elementIndex++
                 }
             }
         }
 
-        return Tensor(Shape(numRows, numCols), elements)
+        return Tensor(Shape(outRows, outCols), elements)
+    }
+
+    override fun toString(): String {
+        return "Tensor(${shape}, ${Arrays.toString(elements)})"
     }
 }
 
