@@ -5,6 +5,29 @@ import org.junit.Test
 
 class TensorNNTest {
     @Test
+    fun testMaxPool() {
+        run {
+            val a = Tensor(Shape(2,3,1), floatArrayOf(0,1,2,3,4,5))
+            var r = a.maxPool(intArrayOf(1,3,1), intArrayOf(1,1,1))
+            assertEquals(Tensor(Shape(2,3,1), floatArrayOf(1,2,2,4,5,5)), r)
+        }
+
+        run {
+            val b = Tensor(Shape(2,2,2), floatArrayOf(0,1,2,3,4,5,6,7))
+
+            run {
+                val r = b.maxPool(intArrayOf(1,2,1), intArrayOf(1,1,1))
+                assertEquals(Tensor(Shape(2,2,2), floatArrayOf(2, 3, 2, 3, 6, 7, 6, 7)), r)
+            }
+
+            run {
+                val r = b.maxPool(intArrayOf(1,2,1), intArrayOf(1,2,1))
+                assertEquals(Tensor(Shape(2,1,2), floatArrayOf(2, 3, 6, 7)), r)
+            }
+        }
+    }
+
+    @Test
     fun testConv2d() {
         run {
             val a = Tensor(Shape(2,4,1), floatArrayOf(1,2,3,4,5,6,7,8))

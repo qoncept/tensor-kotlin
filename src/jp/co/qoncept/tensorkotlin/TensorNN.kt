@@ -12,13 +12,69 @@ val Tensor.relu: Tensor
         return Tensor(shape, _elements.map { Math.max(it, 0.0f) })
     }
 
+fun Tensor.maxPool(kernelSize: IntArray, strides: IntArray): Tensor {
+    assert({ shape.dimensions.size == 3 }, { "`shape.dimensions.size` must be 3: ${shape.dimensions.size}" })
+    assert({ kernelSize.size == 3 }, { "`kernelSize.size` must be 3: ${kernelSize.size}" })
+    assert({ kernelSize[2] == 1 } , { "`kernelSize[2]` != 1 is not supported: ${ kernelSize[2] }" })
+    assert({ strides.size == 3 }, { "`strides.size` must be 3: ${ strides.size }" })
+    assert({ strides[2] == 1 } , { "`strides[2]` != 1 is not supported: ${ strides[2] }" })
+
+    val numRows = shape.dimensions[0]
+    val numCols = shape.dimensions[1]
+    val numChannels = shape.dimensions[2]
+
+    val filterHeight = kernelSize[0]
+    val filterWidth = kernelSize[1]
+
+    val minDy = -(filterHeight - 1) / 2
+    val maxDy = minDy + filterHeight - 1
+    val minDx = -(filterWidth - 1) / 2
+    val maxDx = minDx + filterWidth - 1
+
+    val rowStride = strides[0]
+    val colStride = strides[1]
+
+    val outRows = shape.dimensions[0] ceilDiv rowStride
+    val outCols = shape.dimensions[1] ceilDiv colStride
+
+    val elements = FloatArray(outCols * outRows * numChannels)
+
+    var elementIndex = 0
+    for (y in 0 until outRows) {
+        for (x in 0 until outCols) {
+            val inY = y * rowStride
+            val inX = x * colStride
+
+            val minY2 = Math.max(inY + minDy, 0)
+            val maxY2 = Math.min(inY + maxDy, numRows - 1)
+            val minX2 = Math.max(inX + minDx, 0)
+            val maxX2 = Math.min(inX + maxDx, numCols - 1)
+
+            val y2Offset = inY + minDy
+            val x2Offset = inX + minDx
+
+            for (c in 0 until numChannels) {
+                var maxElement = Float.MIN_VALUE
+                for (y2 in minY2..maxY2) {
+                    for (x2 in minX2..maxX2) {
+                        maxElement = Math.max(maxElement, _elements[(y2 * numCols + x2) * numChannels + c])
+                    }
+                }
+                elements[elementIndex++] = maxElement
+            }
+        }
+    }
+
+    return Tensor(Shape(outRows, outCols, numChannels), elements)
+}
+
 fun Tensor.conv2d(filter: Tensor, strides: IntArray): Tensor {
     val inChannels = filter.shape.dimensions[2]
 
     assert({ shape.dimensions.size == 3 }, { "`shape.dimensions.size` must be 3: ${shape.dimensions.size}" })
     assert({ filter.shape.dimensions.size == 4 }, { "`filter.shape.dimensions.size` must be 4: ${filter.shape.dimensions.size}" })
     assert({ strides.size == 3 }, { "`strides.size` must be 3: ${ strides.size }" })
-    assert({ strides[2] == 1 } , { "`strides[2]` != 0 is not supported: ${ strides[2] }" })
+    assert({ strides[2] == 1 } , { "`strides[2]` != 1 is not supported: ${ strides[2] }" })
     assert({ shape.dimensions[2] == inChannels }, { "The number of channels of this tensor and the filter are not compatible: ${shape.dimensions[2]} != ${inChannels}" })
 
     val numRows = shape.dimensions[0]
