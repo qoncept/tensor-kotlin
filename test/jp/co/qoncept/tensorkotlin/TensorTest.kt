@@ -8,22 +8,22 @@ class TensorTest {
     fun testIndex() {
         run {
             val a = Tensor(Shape())
-            assertEquals(a.index(intArrayOf()), 0)
+            assertEquals(0, a.index(intArrayOf()))
         }
 
         run {
             val a = Tensor(Shape(7))
-            assertEquals(a.index(intArrayOf(3)), 3)
+            assertEquals(3, a.index(intArrayOf(3)))
         }
 
         run {
             val a = Tensor(Shape(5, 7))
-            assertEquals(a.index(intArrayOf(1, 2)), 9)
+            assertEquals(9, a.index(intArrayOf(1, 2)))
         }
 
         run {
             val a = Tensor(Shape(5, 7, 11))
-            assertEquals(a.index(intArrayOf(3, 1, 2)), 244)
+            assertEquals(244, a.index(intArrayOf(3, 1, 2)))
         }
     }
 
@@ -33,7 +33,7 @@ class TensorTest {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
             val r = a + b
-            assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(8, 10, 12, 14, 16, 18)))
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(8, 10, 12, 14, 16, 18)), r)
         }
     }
 
@@ -43,7 +43,7 @@ class TensorTest {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(12, 11, 10, 9, 8, 7))
             val r = a - b
-            assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(-11, -9, -7, -5, -3, -1)))
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(-11, -9, -7, -5, -3, -1)), r)
         }
     }
 
@@ -53,7 +53,7 @@ class TensorTest {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
             val r = a * b
-                    assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(7, 16, 27, 40, 55, 72)))
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(7, 16, 27, 40, 55, 72)), r)
         }
     }
 
@@ -63,7 +63,7 @@ class TensorTest {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(2, 4, 8, 16, 32, 64))
             val r = a / b
-                    assertEquals(r, Tensor(Shape(2, 3), floatArrayOf(0.5f, 0.5f, 0.375f, 0.25f, 0.15625f, 0.09375f)))
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(0.5f, 0.5f, 0.375f, 0.25f, 0.15625f, 0.09375f)), r)
         }
     }
 
@@ -73,7 +73,7 @@ class TensorTest {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(3, 4), floatArrayOf(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18))
             val r = a.matmul(b)
-            assertEquals(r, Tensor(Shape(2, 4), floatArrayOf(74, 80, 86, 92, 173, 188, 203, 218)))
+            assertEquals(Tensor(Shape(2, 4), floatArrayOf(74, 80, 86, 92, 173, 188, 203, 218)), r)
         }
     }
 
