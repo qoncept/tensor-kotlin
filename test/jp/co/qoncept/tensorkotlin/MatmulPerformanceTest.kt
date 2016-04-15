@@ -2,21 +2,23 @@ package jp.co.qoncept.tensorkotlin
 
 import org.junit.Test
 
-private fun createTensor1000x1000(): Tensor {
-    val elements = floatArrayOf(1000 * 1000, 0.1f)
-    return Tensor(Shape(1000, 1000), elements)
+private val dimension = 10000
+
+private fun createMatrix(): Tensor {
+    val elements = FloatArray(dimension * dimension).map { Math.random().toFloat() }
+    return Tensor(Shape(dimension, dimension), elements)
 }
 
-private fun createTensor1x1000(): Tensor {
-    val elements = floatArrayOf(1 * 1000, 0.1f)
-    return Tensor(Shape(1, 1000), elements)
+private fun createVector(): Tensor {
+    val elements = FloatArray(1 * dimension).map { Math.random().toFloat() }
+    return Tensor(Shape(1, dimension), elements)
 }
 
 class MatmulPerformanceTest {
     @Test
-    fun testMultiplication(){
-        val W = createTensor1000x1000()
-        val x = createTensor1x1000()
+    fun testMatmul(){
+        val W = createMatrix()
+        val x = createVector()
 
         measureBlock {
             x.matmul(W)

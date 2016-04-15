@@ -11,10 +11,7 @@ internal fun floatArrayOf(vararg elements: Int): FloatArray {
 
 internal fun measureBlock(procedure: () -> Unit) {
     run {
-        val stackTrace = Thread.getAllStackTraces().values.iterator().next()
-        val iterator = stackTrace.iterator()
-        iterator.next()
-        val element = iterator.next()
+        val element = Thread.currentThread().stackTrace[2]
         println("measureBlock: ${element.className}\$${element.methodName}")
     }
 
