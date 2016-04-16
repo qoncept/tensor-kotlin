@@ -50,9 +50,6 @@ fun Tensor.maxPool(kernelSize: IntArray, strides: IntArray): Tensor {
             val minX2 = Math.max(inX + minDx, 0)
             val maxX2 = Math.min(inX + maxDx, numCols - 1)
 
-            val y2Offset = inY + minDy
-            val x2Offset = inX + minDx
-
             for (c in 0 until numChannels) {
                 var maxElement = Float.MIN_VALUE
                 for (y2 in minY2..maxY2) {
