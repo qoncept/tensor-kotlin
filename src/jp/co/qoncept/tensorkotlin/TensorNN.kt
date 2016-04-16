@@ -3,13 +3,13 @@ package jp.co.qoncept.tensorkotlin
 val Tensor.softmax: Tensor
     get() {
         val exps = exp
-        val sum = exps._elements.fold(0.0f) { r, x -> r + x }
+        val sum = exps.elements.fold(0.0f) { r, x -> r + x }
         return exps / sum
     }
 
 val Tensor.relu: Tensor
     get() {
-        return Tensor(shape, _elements.map { Math.max(it, 0.0f) })
+        return Tensor(shape, this.elements.map { Math.max(it, 0.0f) })
     }
 
 fun Tensor.maxPool(kernelSize: IntArray, strides: IntArray): Tensor {
@@ -57,7 +57,7 @@ fun Tensor.maxPool(kernelSize: IntArray, strides: IntArray): Tensor {
                 var maxElement = Float.MIN_VALUE
                 for (y2 in minY2..maxY2) {
                     for (x2 in minX2..maxX2) {
-                        maxElement = Math.max(maxElement, _elements[(y2 * numCols + x2) * numChannels + c])
+                        maxElement = Math.max(maxElement, this.elements[(y2 * numCols + x2) * numChannels + c])
                     }
                 }
                 elements[elementIndex++] = maxElement
@@ -114,8 +114,8 @@ fun Tensor.conv2d(filter: Tensor, strides: IntArray): Tensor {
                 for (x2 in minX2..maxX2) {
                     matmuladd(
                             inChannels, outChannels,
-                            (y2 * numCols + x2) * inChannels, _elements,
-                            ((y2 - y2Offset) * filterWidth + (x2 - x2Offset)) * inChannels * outChannels, filter._elements,
+                            (y2 * numCols + x2) * inChannels, this.elements,
+                            ((y2 - y2Offset) * filterWidth + (x2 - x2Offset)) * inChannels * outChannels, filter.elements,
                             (y * outCols + x) * outChannels, elements
                     )
                 }

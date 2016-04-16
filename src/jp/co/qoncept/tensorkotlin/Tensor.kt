@@ -2,12 +2,7 @@ package jp.co.qoncept.tensorkotlin
 
 import java.util.*
 
-class Tensor(val shape: Shape, elements: FloatArray) {
-    internal val _elements = elements
-
-    val elements: FloatArray
-        get() = _elements.clone()
-
+class Tensor(val shape: Shape, val elements: FloatArray) {
     constructor(shape: Shape, element: Float = 0.0f) : this(shape, floatArrayOf(shape.volume, element)) {
     }
 
@@ -74,9 +69,9 @@ class Tensor(val shape: Shape, elements: FloatArray) {
         for (r in 0 until outRows) {
             for (i in 0 until inCols1Rows2) {
                 var elementIndex = r * outCols
-                val left = _elements[r * inCols1Rows2 + i]
+                val left = this.elements[r * inCols1Rows2 + i]
                 for (c in 0 until outCols) {
-                    elements[elementIndex] += left * tensor._elements[i * outCols + c]
+                    elements[elementIndex] += left * tensor.elements[i * outCols + c]
                     elementIndex++
                 }
             }
