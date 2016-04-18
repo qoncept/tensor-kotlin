@@ -28,7 +28,7 @@ class TensorTest {
     }
 
     @Test
-    fun testAdd() {
+    fun testPlus() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
@@ -38,7 +38,7 @@ class TensorTest {
     }
 
     @Test
-    fun testSub() {
+    fun testMinus() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(12, 11, 10, 9, 8, 7))
@@ -48,7 +48,7 @@ class TensorTest {
     }
 
     @Test
-    fun testMul() {
+    fun testTimes() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
