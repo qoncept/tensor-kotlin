@@ -79,8 +79,7 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
     }
 
     operator fun div(tensor: Tensor): Tensor {
-        assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-        return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs / rhs })
+        return noncommutativeBinaryOperation(tensor, { lhs, rhs -> lhs / rhs }, { lhs, rhs -> rhs / lhs})
     }
 
     operator fun times(scalar: Float): Tensor {
