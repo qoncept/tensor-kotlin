@@ -51,8 +51,19 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
     }
 
     operator fun minus(tensor: Tensor): Tensor {
-        assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-        return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs - rhs })
+        val lSize = shape.dimensions.size
+        val rSize = tensor.shape.dimensions.size
+
+        if (lSize == rSize) {
+            assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+            return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs - rhs })
+        } else if (lSize < rSize) {
+            assert({ tensor.shape.dimensions.endsWith(shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+            return Tensor(tensor.shape, zipMapRepeat(tensor.elements, elements) { lhs, rhs -> rhs - lhs })
+        } else {
+            assert({ shape.dimensions.endsWith(tensor.shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+            return Tensor(shape, zipMapRepeat(elements, tensor.elements) { lhs, rhs -> lhs - rhs })
+        }
     }
 
     operator fun times(tensor: Tensor): Tensor {

@@ -56,8 +56,22 @@ class TensorTest {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(12, 11, 10, 9, 8, 7))
-            val r = a - b
-            assertEquals(Tensor(Shape(2, 3), floatArrayOf(-11, -9, -7, -5, -3, -1)), r)
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(-11, -9, -7, -5, -3, -1)), a - b)
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(11, 9, 7, 5, 3, 1)), b - a)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 3, 2), floatArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+            val b = Tensor(Shape(2), floatArrayOf(100, 200))
+            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(-99, -198, -97, -196, -95, -194, -93, -192, -91, -190, -89, -188)), a - b)
+            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(99, 198, 97, 196, 95, 194, 93, 192, 91, 190, 89, 188)), b - a)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 1, 3, 2), floatArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+            val b = Tensor(Shape(3, 2), floatArrayOf(100, 200, 300, 400, 500, 600))
+            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(-99, -198, -297, -396, -495, -594, -93, -192, -291, -390, -489, -588)), a - b)
+            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(99, 198, 297, 396, 495, 594, 93, 192, 291, 390, 489, 588)), b - a)
         }
     }
 
