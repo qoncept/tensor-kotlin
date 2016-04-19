@@ -85,6 +85,48 @@ class TensorNNTest {
             assertEquals(185616.0f, result[9, 9, 30])
             assertEquals(186408.0f, result[9, 9, 31])
         }
+
+        run {
+            val a = Tensor(Shape(64, 43, 1), naturalNumbers(64 * 43))
+            val filter = Tensor(Shape(5, 5, 1, 32), naturalNumbers(5 * 5 * 32))
+            val result = a.conv2d(filter, intArrayOf(1, 1, 1))
+            assertEquals(Shape(64, 43, 32),  result.shape)
+            assertEquals(269568.0f, result[0, 0, 0])
+            assertEquals(269964.0f, result[0, 0, 1])
+            assertEquals(270360.0f, result[0, 0, 2])
+            assertEquals(281052.0f, result[0, 0, 29])
+            assertEquals(281448.0f, result[0, 0, 30])
+            assertEquals(281844.0f, result[0, 0, 31])
+            assertEquals(354560.0f, result[0, 1, 0])
+            assertEquals(436960.0f, result[0, 2, 0])
+            assertEquals(747040.0f, result[0, 40, 0])
+            assertEquals(584576.0f, result[0, 41, 0])
+            assertEquals(428544.0f, result[0, 42, 0])
+            assertEquals(5425695.0f, result[63, 42, 29])
+            assertEquals(5450058.0f, result[63, 42, 30])
+            assertEquals(5474421.0f, result[63, 42, 31])
+        }
+
+        run {
+            val a = Tensor(Shape(64, 43, 1), naturalNumbers(64 * 43).map { 1.0f / (it + 1)})
+            val filter = Tensor(Shape(5, 5, 1, 32), naturalNumbers(5 * 5 * 32). map { 1.0f / (it + 1) })
+            val result = a.conv2d(filter, intArrayOf(1, 1, 1))
+            assertEquals(Shape(64, 43, 32),  result.shape)
+            assertEquals(4.70107934e-03f, result[0, 0, 0])
+            assertEquals(4.68956726e-03f, result[0, 0, 1])
+            assertEquals(4.67811199e-03f, result[0, 0, 2])
+            assertEquals(4.38879896e-03f, result[0, 0, 29])
+            assertEquals(4.37877374e-03f, result[0, 0, 30])
+            assertEquals(4.36879462e-03f, result[0, 0, 31])
+            assertEquals(5.70829911e-03f, result[0, 1, 0])
+            assertEquals(6.72411174e-03f, result[0, 2, 0])
+            assertEquals(4.89232189e-04f, result[0, 40, 0])
+            assertEquals(4.00262536e-04f, result[0, 41, 0])
+            assertEquals(3.07742739e-04f, result[0, 42, 0])
+            assertEquals(3.04842852e-05f, result[63, 42, 29])
+            assertEquals(2.99116928e-05f, result[63, 42, 30])
+            assertEquals(2.93684534e-05f, result[63, 42, 31])
+        }
     }
 
     @Test
