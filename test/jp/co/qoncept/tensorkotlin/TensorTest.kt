@@ -32,22 +32,22 @@ class TensorTest {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
             val b = Tensor(Shape(2, 3), floatArrayOf(7, 8, 9, 10, 11, 12))
-            val r = a + b
-            assertEquals(Tensor(Shape(2, 3), floatArrayOf(8, 10, 12, 14, 16, 18)), r)
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(8, 10, 12, 14, 16, 18)), a + b)
+            assertEquals(Tensor(Shape(2, 3), floatArrayOf(8, 10, 12, 14, 16, 18)), b + a)
         }
 
         run {
             val a = Tensor(Shape(2, 3, 2), floatArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
             val b = Tensor(Shape(2), floatArrayOf(100, 200))
-            val r = a + b
-            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(101, 202, 103, 204, 105, 206, 107, 208, 109, 210, 111, 212)), r)
+            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(101, 202, 103, 204, 105, 206, 107, 208, 109, 210, 111, 212)), a + b)
+            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(101, 202, 103, 204, 105, 206, 107, 208, 109, 210, 111, 212)), b + a)
         }
 
         run {
             val a = Tensor(Shape(2, 1, 3, 2), floatArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
             val b = Tensor(Shape(3, 2), floatArrayOf(100, 200, 300, 400, 500, 600))
-            val r = a + b
-            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(101, 202, 303, 404, 505, 606, 107, 208, 309, 410, 511, 612)), r)
+            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(101, 202, 303, 404, 505, 606, 107, 208, 309, 410, 511, 612)), a + b)
+            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(101, 202, 303, 404, 505, 606, 107, 208, 309, 410, 511, 612)), b + a)
         }
     }
 

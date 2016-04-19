@@ -47,7 +47,7 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
         }
         assert({ a.shape.dimensions.endsWith(b.shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
 
-        return Tensor(shape, zipMapRepeat(a.elements, b.elements) { lhs, rhs -> lhs + rhs })
+        return Tensor(a.shape, zipMapRepeat(a.elements, b.elements) { lhs, rhs -> lhs + rhs })
     }
 
     operator fun minus(tensor: Tensor): Tensor {
