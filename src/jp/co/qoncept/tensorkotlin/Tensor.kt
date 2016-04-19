@@ -27,13 +27,13 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
         }
     }
 
-    operator fun plus(tensor: Tensor): Tensor {
+    private inline fun commutativeBinaryOperation(tensor: Tensor, operation: (Float, Float) -> Float): Tensor {
         val lSize = shape.dimensions.size
         val rSize = tensor.shape.dimensions.size
 
         if (lSize == rSize) {
             assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-            return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs + rhs })
+            return Tensor(shape, zipMap(elements, tensor.elements, operation))
         }
 
         val a: Tensor
@@ -47,7 +47,11 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
         }
         assert({ a.shape.dimensions.endsWith(b.shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
 
-        return Tensor(a.shape, zipMapRepeat(a.elements, b.elements) { lhs, rhs -> lhs + rhs })
+        return Tensor(a.shape, zipMapRepeat(a.elements, b.elements, operation))
+    }
+
+    operator fun plus(tensor: Tensor): Tensor {
+        return commutativeBinaryOperation(tensor) { lhs, rhs -> lhs + rhs }
     }
 
     operator fun minus(tensor: Tensor): Tensor {
@@ -67,8 +71,7 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
     }
 
     operator fun times(tensor: Tensor): Tensor {
-        assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-        return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs * rhs })
+        return commutativeBinaryOperation(tensor) { lhs, rhs -> lhs * rhs }
     }
 
     operator fun div(tensor: Tensor): Tensor {

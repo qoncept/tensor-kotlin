@@ -83,6 +83,20 @@ class TensorTest {
             val r = a * b
             assertEquals(Tensor(Shape(2, 3), floatArrayOf(7, 16, 27, 40, 55, 72)), r)
         }
+
+        run {
+            val a = Tensor(Shape(2, 3, 2), floatArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+            val b = Tensor(Shape(2), floatArrayOf(10, 100))
+            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(10, 200, 30, 400, 50, 600, 70, 800, 90, 1000, 110, 1200)), a * b)
+            assertEquals(Tensor(Shape(2, 3, 2), floatArrayOf(10, 200, 30, 400, 50, 600, 70, 800, 90, 1000, 110, 1200)), b * a)
+        }
+
+        run {
+            val a = Tensor(Shape(2, 1, 3, 2), floatArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+            val b = Tensor(Shape(3, 2), floatArrayOf(10, 100, 1000, -10, -100, -1000))
+            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(10, 200, 3000, -40, -500, -6000, 70, 800, 9000, -100, -1100, -12000)), a * b)
+            assertEquals(Tensor(Shape(2, 1, 3, 2), floatArrayOf(10, 200, 3000, -40, -500, -6000, 70, 800, 9000, -100, -1100, -12000)), b * a)
+        }
     }
 
     @Test
