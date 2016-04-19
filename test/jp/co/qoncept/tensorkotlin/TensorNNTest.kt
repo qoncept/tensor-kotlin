@@ -64,6 +64,27 @@ class TensorNNTest {
             val result = a.conv2d(filter, intArrayOf(3,3,1))
             assertEquals(Tensor(Shape(2,2,1), floatArrayOf(18,33,95,113)), result)
         }
+
+        run {
+            val a = Tensor(Shape(10, 10, 1), naturalNumbers(10 * 10))
+            val filter = Tensor(Shape(5, 5, 1, 32), naturalNumbers(5 * 5 * 32))
+            val result = a.conv2d(filter, intArrayOf(1, 1, 1))
+            assertEquals(Shape(10, 10, 32),  result.shape)
+            assertEquals(66816.0f, result[0, 0, 0])
+            assertEquals(66915.0f, result[0, 0, 1])
+            assertEquals(67014.0f, result[0, 0, 2])
+            assertEquals(69687.0f, result[0, 0, 29])
+            assertEquals(69786.0f, result[0, 0, 30])
+            assertEquals(69885.0f, result[0, 0, 31])
+            assertEquals(90560.0f, result[0, 1, 0])
+            assertEquals(114880.0f, result[0, 2, 0])
+            assertEquals(155680.0f, result[0, 7, 0])
+            assertEquals(124160.0f, result[0, 8, 0])
+            assertEquals(92736.0f, result[0, 9, 0])
+            assertEquals(184824.0f, result[9, 9, 29])
+            assertEquals(185616.0f, result[9, 9, 30])
+            assertEquals(186408.0f, result[9, 9, 31])
+        }
     }
 
     @Test
