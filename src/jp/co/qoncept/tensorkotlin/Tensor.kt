@@ -50,24 +50,28 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
         return Tensor(a.shape, zipMapRepeat(a.elements, b.elements, operation))
     }
 
-    operator fun plus(tensor: Tensor): Tensor {
-        return commutativeBinaryOperation(tensor) { lhs, rhs -> lhs + rhs }
-    }
-
-    operator fun minus(tensor: Tensor): Tensor {
+    private inline fun noncommutativeBinaryOperation(tensor: Tensor, operation: (Float, Float) -> Float, reverseOperation: (Float, Float) -> Float): Tensor {
         val lSize = shape.dimensions.size
         val rSize = tensor.shape.dimensions.size
 
         if (lSize == rSize) {
             assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-            return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs - rhs })
+            return Tensor(shape, zipMap(elements, tensor.elements, operation))
         } else if (lSize < rSize) {
             assert({ tensor.shape.dimensions.endsWith(shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-            return Tensor(tensor.shape, zipMapRepeat(tensor.elements, elements) { lhs, rhs -> rhs - lhs })
+            return Tensor(tensor.shape, zipMapRepeat(tensor.elements, elements, reverseOperation))
         } else {
             assert({ shape.dimensions.endsWith(tensor.shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-            return Tensor(shape, zipMapRepeat(elements, tensor.elements) { lhs, rhs -> lhs - rhs })
+            return Tensor(shape, zipMapRepeat(elements, tensor.elements, operation))
         }
+    }
+
+    operator fun plus(tensor: Tensor): Tensor {
+        return commutativeBinaryOperation(tensor) { lhs, rhs -> lhs + rhs }
+    }
+
+    operator fun minus(tensor: Tensor): Tensor {
+        return noncommutativeBinaryOperation(tensor, { lhs, rhs -> lhs - rhs }, { lhs, rhs -> rhs - lhs})
     }
 
     operator fun times(tensor: Tensor): Tensor {
