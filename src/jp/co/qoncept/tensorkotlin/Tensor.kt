@@ -28,8 +28,26 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
     }
 
     operator fun plus(tensor: Tensor): Tensor {
-        assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
-        return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs + rhs })
+        val lSize = shape.dimensions.size
+        val rSize = tensor.shape.dimensions.size
+
+        if (lSize == rSize) {
+            assert({ shape == tensor.shape }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+            return Tensor(shape, zipMap(elements, tensor.elements) { lhs, rhs -> lhs + rhs })
+        }
+
+        val a: Tensor
+        val b: Tensor
+        if (lSize < rSize) {
+            a = tensor
+            b = this
+        } else {
+            a = this
+            b = tensor
+        }
+        assert({ a.shape.dimensions.endsWith(b.shape.dimensions) }, { "Incompatible shapes of tensors: this.shape = ${shape}, tensor.shape = ${tensor.shape}" })
+
+        return Tensor(shape, zipMapRepeat(a.elements, b.elements) { lhs, rhs -> lhs + rhs })
     }
 
     operator fun minus(tensor: Tensor): Tensor {
