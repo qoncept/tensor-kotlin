@@ -127,6 +127,27 @@ class TensorNNTest {
             assertEquals(2.99116928e-05f, result[63, 42, 30])
             assertEquals(2.93684534e-05f, result[63, 42, 31])
         }
+
+        run {
+            val a = Tensor(Shape(43, 64, 1), naturalNumbers(43 * 64).map { 1.0f / (it + 1)})
+            val filter = Tensor(Shape(5, 5, 1, 32), naturalNumbers(5 * 5 * 32). map { 1.0f / (it + 1) })
+            val result = a.conv2d(filter, intArrayOf(1, 1, 1))
+            assertEquals(Shape(43, 64, 32),  result.shape)
+            assertEquals(4.64918977e-03f, result[0, 0, 0])
+            assertEquals(4.63776244e-03f, result[0, 0, 1])
+            assertEquals(4.62639052e-03f, result[0, 0, 2])
+            assertEquals(4.33925306e-03f, result[0, 0, 29])
+            assertEquals(4.32930561e-03f, result[0, 0, 30])
+            assertEquals(4.31940285e-03f, result[0, 0, 31])
+            assertEquals(5.63816028e-03f, result[0, 1, 0])
+            assertEquals(6.63504843e-03f, result[0, 2, 0])
+            assertEquals(3.24019609e-04f, result[0, 61, 0])
+            assertEquals(2.66118324e-04f, result[0, 62, 0])
+            assertEquals(2.05358563e-04f, result[0, 63, 0])
+            assertEquals(3.08850504e-05f, result[42, 63, 29])
+            assertEquals(3.03035958e-05f, result[42, 63, 30])
+            assertEquals(2.97519691e-05f, result[42, 63, 31])
+        }
     }
 
     @Test
