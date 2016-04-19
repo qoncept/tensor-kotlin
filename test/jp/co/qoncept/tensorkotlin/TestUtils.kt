@@ -31,3 +31,11 @@ internal fun measureBlock(procedure: () -> Unit) {
     println("avg: ${total / 1000.0 / N} [s]")
     println()
 }
+
+internal fun naturalNumbers(n: Int): FloatArray {
+    val result = FloatArray(n)
+    for (i in 0 until n) {
+        result[i] = i.toFloat()
+    }
+    return result
+}
