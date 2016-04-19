@@ -14,6 +14,14 @@ internal inline fun zipMap(a: FloatArray, b: FloatArray, operation: (Float, Floa
     return result
 }
 
+internal inline fun zipMapRepeat(a: FloatArray, infiniteB: FloatArray, operation: (Float, Float) -> Float): FloatArray {
+    val result = FloatArray(a.size)
+    for (i in a.indices) {
+        result[i] = operation(a[i], infiniteB[i % infiniteB.size])
+    }
+    return result
+}
+
 internal inline fun <R> zipFold(a: FloatArray, b: FloatArray, initial: R, operation: (R, Float, Float) -> R): R {
     var result: R = initial
     for (i in a.indices) {
@@ -36,6 +44,17 @@ internal inline fun FloatArray.map(transform: (Float) -> Float): FloatArray {
         result[i] = transform(this[i])
     }
     return result
+}
+
+internal fun IntArray.endsWith(suffix: IntArray): Boolean {
+    if (size < suffix.size) { return false }
+    val offset = size - suffix.size
+    for (i in suffix.indices) {
+        if (this[offset + i] != suffix[i]) {
+            return false
+        }
+    }
+    return true
 }
 
 internal inline fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
