@@ -34,19 +34,19 @@ fun Tensor.maxPool(kernelSize: IntArray, strides: IntArray): Tensor {
     val rowStride = strides[0]
     val colStride = strides[1]
 
-    val outRows = shape.dimensions[0] ceilDiv rowStride
-    val outCols = shape.dimensions[1] ceilDiv colStride
+    val outRows = numRows ceilDiv rowStride
+    val outCols = numCols ceilDiv colStride
 
     val elements = FloatArray(outCols * outRows * numChannels)
 
     var elementIndex = 0
     for (y in 0 until outRows) {
-        for (x in 0 until outCols) {
-            val inY = y * rowStride
-            val inX = x * colStride
+        val inY = y * rowStride
+        val minY2 = Math.max(inY + minDy, 0)
+        val maxY2 = Math.min(inY + maxDy, numRows - 1)
 
-            val minY2 = Math.max(inY + minDy, 0)
-            val maxY2 = Math.min(inY + maxDy, numRows - 1)
+        for (x in 0 until outCols) {
+            val inX = x * colStride
             val minX2 = Math.max(inX + minDx, 0)
             val maxX2 = Math.min(inX + maxDx, numCols - 1)
 
@@ -95,12 +95,12 @@ fun Tensor.conv2d(filter: Tensor, strides: IntArray): Tensor {
     val elements = FloatArray(outCols * outRows * outChannels)
 
     for (y in 0 until outRows) {
-        for (x in 0 until outCols) {
-            val inY = y * rowStride
-            val inX = x * colStride
+        val inY = y * rowStride
+        val minY2 = Math.max(inY + minDy, 0)
+        val maxY2 = Math.min(inY + maxDy, numRows - 1)
 
-            val minY2 = Math.max(inY + minDy, 0)
-            val maxY2 = Math.min(inY + maxDy, numRows - 1)
+        for (x in 0 until outCols) {
+            val inX = x * colStride
             val minX2 = Math.max(inX + minDx, 0)
             val maxX2 = Math.min(inX + maxDx, numCols - 1)
 
