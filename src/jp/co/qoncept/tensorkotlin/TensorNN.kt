@@ -19,42 +19,42 @@ fun Tensor.maxPool(kernelSize: IntArray, strides: IntArray): Tensor {
     assert({ strides.size == 3 }, { "`strides.size` must be 3: ${ strides.size }" })
     assert({ strides[2] == 1 } , { "`strides[2]` != 1 is not supported: ${ strides[2] }" })
 
-    val numRows = shape.dimensions[0]
-    val numCols = shape.dimensions[1]
+    val inRows = shape.dimensions[0]
+    val inCols = shape.dimensions[1]
     val numChannels = shape.dimensions[2]
 
     val filterHeight = kernelSize[0]
     val filterWidth = kernelSize[1]
 
-    val minDy = -(filterHeight - 1) / 2
-    val maxDy = minDy + filterHeight - 1
-    val minDx = -(filterWidth - 1) / 2
-    val maxDx = minDx + filterWidth - 1
+    val inMinDy = -(filterHeight - 1) / 2
+    val inMaxDy = inMinDy + filterHeight - 1
+    val inMinDx = -(filterWidth - 1) / 2
+    val inMaxDx = inMinDx + filterWidth - 1
 
     val rowStride = strides[0]
     val colStride = strides[1]
 
-    val outRows = numRows ceilDiv rowStride
-    val outCols = numCols ceilDiv colStride
+    val outRows = inRows ceilDiv rowStride
+    val outCols = inCols ceilDiv colStride
 
     val elements = FloatArray(outCols * outRows * numChannels)
 
     var elementIndex = 0
     for (y in 0 until outRows) {
-        val inY = y * rowStride
-        val minY2 = Math.max(inY + minDy, 0)
-        val maxY2 = Math.min(inY + maxDy, numRows - 1)
+        val inY0 = y * rowStride
+        val inMinY = Math.max(inY0 + inMinDy, 0)
+        val inMaxY = Math.min(inY0 + inMaxDy, inRows - 1)
 
         for (x in 0 until outCols) {
-            val inX = x * colStride
-            val minX2 = Math.max(inX + minDx, 0)
-            val maxX2 = Math.min(inX + maxDx, numCols - 1)
+            val inX0 = x * colStride
+            val inMinX = Math.max(inX0 + inMinDx, 0)
+            val inMaxX = Math.min(inX0 + inMaxDx, inCols - 1)
 
             for (c in 0 until numChannels) {
                 var maxElement = Float.MIN_VALUE
-                for (y2 in minY2..maxY2) {
-                    for (x2 in minX2..maxX2) {
-                        maxElement = Math.max(maxElement, this.elements[(y2 * numCols + x2) * numChannels + c])
+                for (inY in inMinY..inMaxY) {
+                    for (inX in inMinX..inMaxX) {
+                        maxElement = Math.max(maxElement, this.elements[(inY * inCols + inX) * numChannels + c])
                     }
                 }
                 elements[elementIndex++] = maxElement
@@ -74,16 +74,16 @@ fun Tensor.conv2d(filter: Tensor, strides: IntArray): Tensor {
     assert({ strides[2] == 1 } , { "`strides[2]` != 1 is not supported: ${ strides[2] }" })
     assert({ shape.dimensions[2] == inChannels }, { "The number of channels of this tensor and the filter are not compatible: ${shape.dimensions[2]} != ${inChannels}" })
 
-    val numRows = shape.dimensions[0]
-    val numCols = shape.dimensions[1]
+    val inRows = shape.dimensions[0]
+    val inCols = shape.dimensions[1]
 
     val filterHeight = filter.shape.dimensions[0]
     val filterWidth = filter.shape.dimensions[1]
 
-    val minDy = -(filterHeight - 1) / 2
-    val maxDy = minDy + filterHeight - 1
-    val minDx = -(filterWidth - 1) / 2
-    val maxDx = minDx + filterWidth - 1
+    val inMinDy = -(filterHeight - 1) / 2
+    val inMaxDy = inMinDy + filterHeight - 1
+    val inMinDx = -(filterWidth - 1) / 2
+    val inMaxDx = inMinDx + filterWidth - 1
 
     val rowStride = strides[0]
     val colStride = strides[1]
@@ -95,24 +95,24 @@ fun Tensor.conv2d(filter: Tensor, strides: IntArray): Tensor {
     val elements = FloatArray(outCols * outRows * outChannels)
 
     for (y in 0 until outRows) {
-        val inY = y * rowStride
-        val minY2 = Math.max(inY + minDy, 0)
-        val maxY2 = Math.min(inY + maxDy, numRows - 1)
+        val inY0 = y * rowStride
+        val inMinY = Math.max(inY0 + inMinDy, 0)
+        val inMaxY = Math.min(inY0 + inMaxDy, inRows - 1)
 
         for (x in 0 until outCols) {
-            val inX = x * colStride
-            val minX2 = Math.max(inX + minDx, 0)
-            val maxX2 = Math.min(inX + maxDx, numCols - 1)
+            val inX0 = x * colStride
+            val inMinX = Math.max(inX0 + inMinDx, 0)
+            val inMaxX = Math.min(inX0 + inMaxDx, inCols - 1)
 
-            val y2Offset = inY + minDy
-            val x2Offset = inX + minDx
+            val inYOffset = inY0 + inMinDy
+            val inXOffset = inX0 + inMinDx
 
-            for (y2 in minY2..maxY2) {
-                for (x2 in minX2..maxX2) {
+            for (inY in inMinY..inMaxY) {
+                for (inX in inMinX..inMaxX) {
                     matmuladd(
                             inChannels, outChannels,
-                            (y2 * numCols + x2) * inChannels, this.elements,
-                            ((y2 - y2Offset) * filterWidth + (x2 - x2Offset)) * inChannels * outChannels, filter.elements,
+                            (inY * inCols + inX) * inChannels, this.elements,
+                            ((inY - inYOffset) * filterWidth + (inX - inXOffset)) * inChannels * outChannels, filter.elements,
                             (y * outCols + x) * outChannels, elements
                     )
                 }
