@@ -1,6 +1,6 @@
 package jp.co.qoncept.tensorkotlin
 
-import org.junit.Test
+import org.testng.annotations.Test
 
 private val dimension = 10000
 
