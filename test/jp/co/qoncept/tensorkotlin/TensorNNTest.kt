@@ -66,6 +66,13 @@ class TensorNNTest {
         }
 
         run {
+            val a = Tensor(Shape(1,3,1), floatArrayOf(1,2,3))
+            val filter = Tensor(Shape(1,3,1,2), floatArrayOf(1,1,2,2,3,3))
+            val result = a.conv2d(filter, intArrayOf(1,1,1))
+            assertEquals(Tensor(Shape(1,3,2), floatArrayOf(8 ,8, 14, 14, 8, 8)), result)
+        }
+
+        run {
             val a = Tensor(Shape(10, 10, 1), naturalNumbers(10 * 10))
             val filter = Tensor(Shape(5, 5, 1, 32), naturalNumbers(5 * 5 * 32))
             val result = a.conv2d(filter, intArrayOf(1, 1, 1))
