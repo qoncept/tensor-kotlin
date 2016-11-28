@@ -57,7 +57,7 @@ internal fun IntArray.endsWith(suffix: IntArray): Boolean {
     return true
 }
 
-internal inline fun <T> Array<T>.mapToIntArray(transform: (T) -> Int): IntArray {
+internal inline fun <T> Array<out T>.mapToIntArray(transform: (T) -> Int): IntArray {
     val transformed = IntArray(size)
     var i = 0
     while (i < size) {
