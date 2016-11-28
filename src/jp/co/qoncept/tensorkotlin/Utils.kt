@@ -46,6 +46,14 @@ internal inline fun FloatArray.map(transform: (Float) -> Float): FloatArray {
     return result
 }
 
+internal inline fun <T> Array<out T>.map(transform: (T) -> Int): IntArray {
+    val result = IntArray(size)
+    for (i in indices) {
+        result[i] = transform(this[i])
+    }
+    return result
+}
+
 internal fun IntArray.endsWith(suffix: IntArray): Boolean {
     if (size < suffix.size) { return false }
     val offset = size - suffix.size
@@ -55,16 +63,6 @@ internal fun IntArray.endsWith(suffix: IntArray): Boolean {
         }
     }
     return true
-}
-
-internal inline fun <T> Array<out T>.mapToIntArray(transform: (T) -> Int): IntArray {
-    val transformed = IntArray(size)
-    var i = 0
-    while (i < size) {
-        transformed[i] = transform(this[i])
-        i++
-    }
-    return transformed
 }
 
 internal inline fun assert(value: () -> Boolean, lazyMessage: () -> Any) {
