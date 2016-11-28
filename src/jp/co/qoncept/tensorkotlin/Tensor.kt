@@ -18,6 +18,24 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
         return elements[index(indices)]
     }
 
+    operator fun get(vararg ranges: IntRange): Tensor {
+        val size = ranges.size
+        val shape = ranges.mapToIntArray { x -> x.endInclusive - x.start + 1 }
+        val reversedShape = shape.reversed()
+        val indices = IntArray(size)
+        val elements = FloatArray(shape.fold(1, Int::times)) {
+            var i = it
+            var dimensionIndex = size - 1
+            for (dimension in reversedShape) {
+                indices[dimensionIndex] = i % dimension + ranges[dimensionIndex].start
+                i /= dimension
+                dimensionIndex--
+            }
+            get(*indices)
+        }
+        return Tensor(Shape(*shape), elements)
+    }
+
     override fun equals(other: Any?): Boolean {
         if (other !is Tensor) { return false }
 
