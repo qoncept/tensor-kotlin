@@ -28,6 +28,15 @@ class TensorTest {
     }
 
     @Test
+    fun testGetByRanges() {
+        run {
+            val a = Tensor(Shape(5, 5, 5), (1..125).map { it.toFloat() }.toFloatArray())
+            val b = a[1..3, 2..4, 1..2]
+            assertEquals(Tensor(Shape(3, 3, 2), floatArrayOf(37, 38, 42, 43, 47, 48, 62, 63, 67, 68, 72, 73, 87, 88, 92, 93, 97, 98)), b)
+        }
+    }
+
+    @Test
     fun testPlus() {
         run {
             val a = Tensor(Shape(2, 3), floatArrayOf(1, 2, 3, 4, 5, 6))
