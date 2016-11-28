@@ -46,7 +46,7 @@ internal inline fun FloatArray.map(transform: (Float) -> Float): FloatArray {
     return result
 }
 
-internal inline fun <T> Array<out T>.mapToIntArray(transform: (T) -> Int): IntArray {
+internal inline fun <T> Array<out T>.map(transform: (T) -> Int): IntArray {
     val result = IntArray(size)
     for (i in indices) {
         result[i] = transform(this[i])

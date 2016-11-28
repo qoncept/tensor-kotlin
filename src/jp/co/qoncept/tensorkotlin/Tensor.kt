@@ -20,7 +20,7 @@ class Tensor(val shape: Shape, val elements: FloatArray) {
 
     operator fun get(vararg ranges: IntRange): Tensor {
         val size = ranges.size
-        val shape = ranges.mapToIntArray { x -> x.endInclusive - x.start + 1 }
+        val shape = ranges.map { x -> x.endInclusive - x.start + 1 }
         val reversedShape = shape.reversed()
         val indices = IntArray(size)
         val elements = FloatArray(shape.fold(1, Int::times)) {
